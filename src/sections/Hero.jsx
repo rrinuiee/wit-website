@@ -1,123 +1,120 @@
-import { useState } from 'react'
-import { EVENTS, HERO, SLOGANS } from '../content/site'
-import { useWorkshop } from '../context/WorkshopContext'
-import { upcomingEvents } from '../lib/events'
-import { submitFeedback } from '../lib/feedback'
-import { IS_SHARED_FEEDBACK } from '../config/feedback'
-import Stamp from '../components/ui/Stamp'
-import Status from '../components/ui/Status'
-import { IndexCard, MarginNote, Tape } from '../components/ui/Paper'
-import { EmptyTicket, EventTicket } from '../components/ui/EventTicket'
+import { HERO, WHAT_WE_DO } from '../content/wit'
+import { UPCOMING_EVENTS } from '../content/events'
+import { upcomingEvents, formatEventDate } from '../lib/events'
+import ContentTag from '../components/ui/ContentTag'
+import Doodle, { Blob, Squiggle } from '../components/ui/Doodle'
 
-function SloganPicker() {
-  const { slogan, setSlogan, myVote, setMyVote } = useWorkshop()
-  const [status, setStatus] = useState('')
-  const current = SLOGANS.find((s) => s.id === slogan) ?? SLOGANS[0]
-  const voted = SLOGANS.find((s) => s.id === myVote)
-
-  const vote = async () => {
-    setMyVote(current.id)
-    setStatus('Saving…')
-    const res = await submitFeedback({ kind: 'slogan-vote', section: 'slogan', slot: 'Slogan vote', message: current.id })
-    setStatus(
-      res.delivered
-        ? `Vote for “${current.text}” sent to the shared form.`
-        : res.error
-          ? `Vote saved on this device. ${res.error}`
-          : `Vote for “${current.text}” saved on this device only — no shared tally yet.`,
-    )
-  }
-
+/** The decorative "code card" illustration on the right of the hero. */
+function CodeCard() {
   return (
-    <IndexCard as="section" ruled tilt={1.2} className="slogan-card" aria-labelledby="slogan-title">
-      <Tape pos="top" />
-      <h2 id="slogan-title" className="slogan-card__title">
-        Stamp our slogan
-      </h2>
-      <p className="slogan-card__note">
-        Provisional candidates from the strategy. None is approved — help pick one.
-      </p>
-      <Status kind="placeholder" source="Slogan shortlist, strategy §6.2: “pick in workshop”" />
+    <div className="code-card" aria-hidden="true">
+      <div className="code-card__bar">
+        <span />
+        <span />
+        <span />
+        <p>wit.js</p>
+      </div>
+      <pre className="code-card__code">
+        <code>
+          <span className="c-key">const</span> wit = {'{'}
+          {'\n'}  learn: <span className="c-str">'together'</span>,
+          {'\n'}  build: <span className="c-str">'boldly'</span>,
+          {'\n'}  lead: <span className="c-str">'with kindness'</span>,
+          {'\n'}
+          {'}'}
+          {'\n\n'}wit.<span className="c-fn">celebrate</span>() <span className="c-com">// ✦</span>
+        </code>
+      </pre>
+    </div>
+  )
+}
 
-      <fieldset className="slogan-card__options">
-        <legend className="sr-only">Preview a slogan on the stamp</legend>
-        {SLOGANS.map((s) => (
-          <label key={s.id} className="slogan-opt">
-            <input type="radio" name="slogan" value={s.id} checked={slogan === s.id} onChange={() => setSlogan(s.id)} />
-            <span className="slogan-opt__text">{s.text}</span>
-            {myVote === s.id ? <span className="slogan-opt__badge">your vote</span> : null}
-          </label>
-        ))}
-      </fieldset>
-
-      <button type="button" className="btn btn--ink btn--block" onClick={vote}>
-        {voted && voted.id === current.id ? `You voted “${current.text}”` : `Vote for “${current.text}”`}
-      </button>
-      <p className="slogan-card__status" role="status" aria-live="polite">
-        {status ||
-          (IS_SHARED_FEEDBACK
-            ? 'Votes go to the shared workshop form.'
-            : 'Votes stay on this device until a shared form is connected.')}
-      </p>
-    </IndexCard>
+/** Small card showing the next *verified* event from TinkerHub's calendar (if any). */
+function NextUpCard() {
+  const next = upcomingEvents(UPCOMING_EVENTS.filter((e) => e.status === 'verified'))[0]
+  if (!next) return null
+  const d = formatEventDate(next.date)
+  return (
+    <article className="next-card" aria-labelledby="next-card-title">
+      <p className="next-card__label">Next on TinkerHub’s calendar</p>
+      <div className="next-card__row">
+        <time className="next-card__date" dateTime={next.date}>
+          <span>{d.day}</span>
+          {d.month}
+        </time>
+        <div>
+          <h2 id="next-card-title" className="next-card__title">
+            {next.title}
+          </h2>
+          <p className="next-card__meta">{next.format}</p>
+        </div>
+      </div>
+      <ContentTag kind="verified" source={next.source} note={next.note} />
+      <a className="text-link" href="#events">
+        See details
+      </a>
+    </article>
   )
 }
 
 export default function Hero() {
-  const { slogan } = useWorkshop()
-  const current = SLOGANS.find((s) => s.id === slogan) ?? SLOGANS[0]
-  const next = upcomingEvents(EVENTS)[0]
-
   return (
     <section id="hero" className="hero" aria-labelledby="hero-title">
       <div className="container hero__grid">
-        <div className="hero__main">
-          <p className="hero__kicker mono-label">{HERO.kicker}</p>
-
-          <div className="hero__mark">
-            <h1 id="hero-title" className="wordmark">
-              <span className="wordmark__letters" aria-hidden="true">
-                <span>W</span>
-                <span className="wordmark__i">I</span>
-                <span>T</span>
-              </span>
-              <span className="sr-only">WIT — Women in Tech</span>
-            </h1>
-            <Stamp text={current.text} className="hero__stamp" />
-            <div className="wordmark__ruler" aria-hidden="true" />
-          </div>
-
-          <p className="hero__name">
-            <strong>{HERO.fullName}</strong> <span>— {HERO.parent}</span>
+        <div className="hero__copy">
+          <p className="eyebrow">
+            <span className="eyebrow__dot" aria-hidden="true" />
+            {HERO.eyebrow}
           </p>
-          <Status kind="placeholder" source="Wordmark is a type stand-in; no official WIT logo or lockup supplied (§2.5, §8.1)" />
 
-          <div className="hero__tagline-wrap">
-            <p className="hero__tagline">{HERO.tagline}</p>
-            <span className="tag-provisional">provisional tagline</span>
-          </div>
-          <Status
-            kind="recommended"
-            source="Draft written for this workshop from the 01–04 strip; the real tagline is a Placeholder (§5.1, §8.2)"
-          />
+          <h1 id="hero-title" className="hero__title">
+            Women who{' '}
+            <span className="hero__accent">
+              <em>tinker,</em>
+              <Squiggle className="hero__squiggle" />
+            </span>{' '}
+            build &amp; lead.
+          </h1>
+
+          <p className="hero__intro">{HERO.intro}</p>
+          <ContentTag kind="demo" note="Draft introduction written for this prototype — the WIT team should approve the final wording." />
 
           <div className="hero__ctas">
             <a className="btn btn--primary btn--lg" href="#get-involved">
-              Join the community
+              Get involved
             </a>
             <a className="btn btn--ghost btn--lg" href="#events">
               See what’s on
             </a>
           </div>
 
-          <MarginNote className="hero__note">this whole page is a draft — your notes shape it</MarginNote>
+          <ul className="hero__pillars" aria-label="What WIT is about">
+            {WHAT_WE_DO.map((p) => (
+              <li key={p.id} className={`pill pill--${p.tone}`}>
+                <Doodle name={p.icon} />
+                {p.title}
+              </li>
+            ))}
+          </ul>
         </div>
 
-        <div className="hero__aside">
-          <div className="hero__next">
-            {next ? <EventTicket event={next} compact label="Next up" /> : <EmptyTicket />}
+        <div className="hero__art">
+          <div className="hero__stage">
+            <Blob variant={1} className="hero__blob hero__blob--lilac" />
+            <Blob variant={3} className="hero__blob hero__blob--peach" />
+            <Doodle name="flower" className="hero__flower" />
+            <Doodle name="sparkle" className="hero__spark hero__spark--1" />
+            <Doodle name="sparkle" className="hero__spark hero__spark--2" />
+            <CodeCard />
+            <ul className="hero__stickers" aria-hidden="true">
+              {HERO.stickers.map((s, i) => (
+                <li key={s} className={`sticker sticker--${i + 1}`}>
+                  {s}
+                </li>
+              ))}
+            </ul>
           </div>
-          <SloganPicker />
+          <NextUpCard />
         </div>
       </div>
     </section>

@@ -1,57 +1,88 @@
-import { TINKERHUB_URL } from '../../content/site'
-import Placeholder from '../ui/Placeholder'
-import Status from '../ui/Status'
+import { NAV } from '../../content/wit'
+import { CHECKED_ON, REPO } from '../../content/sources'
+import { TINKERHUB_LINKS } from '../../content/tinkerhub'
+import { useWorkshop } from '../../context/WorkshopContext'
+import ExternalLink from '../ui/ExternalLink'
+import ContentTag from '../ui/ContentTag'
+import Logo from './Logo'
 
-const SOCIALS = ['Instagram', 'LinkedIn', 'YouTube', 'Discord / Slack', 'WhatsApp']
+const TINKERHUB_FOOTER_LINKS = [
+  { label: 'TinkerHub', href: TINKERHUB_LINKS.site },
+  { label: 'TinkerSpace', href: TINKERHUB_LINKS.tinkerspace },
+  { label: 'Events', href: TINKERHUB_LINKS.events },
+  { label: 'Study Jams', href: TINKERHUB_LINKS.studyJams },
+  { label: 'Campus communities', href: TINKERHUB_LINKS.campus },
+  { label: 'Community stories (Medium)', href: TINKERHUB_LINKS.stories },
+]
 
 export default function SiteFooter() {
+  const { showSources, setShowSources } = useWorkshop()
   return (
     <footer className="site-footer">
       <div className="container site-footer__grid">
         <div className="site-footer__brand">
-          <p className="site-footer__mark" aria-hidden="true">
-            WIT
+          <Logo size="lg" light />
+          <p className="site-footer__tagline">
+            Learn together. Build boldly. <em>Lift each other.</em>
           </p>
-          <p className="site-footer__credit">
-            crafted with the WIT community <span aria-hidden="true">♥</span>
-          </p>
-          <Status kind="recommended" source="Credit-line convention, strategy §5.8 / §6.1" />
-          <p className="site-footer__parent">
-            Part of the TinkerHub family →{' '}
-            <a href={TINKERHUB_URL} target="_blank" rel="noopener noreferrer">
-              tinkerhub.org<span className="sr-only"> (opens in a new tab)</span>
-            </a>
-          </p>
+          <ContentTag kind="demo" note="Tagline written for this prototype." />
         </div>
 
-        <div className="site-footer__socials">
-          <p className="mono-label">Find WIT</p>
+        <nav aria-label="This page" className="site-footer__col">
+          <h2 className="site-footer__heading">On this page</h2>
           <ul>
-            {SOCIALS.map((s) => (
-              <li key={s}>
-                <span className="social-slot">
-                  {s} <span className="social-slot__tbd">handle tbd</span>
-                </span>
+            {NAV.map((n) => (
+              <li key={n.id}>
+                <a href={`#${n.id}`}>{n.label}</a>
+              </li>
+            ))}
+            <li>
+              <a href="#get-involved">Get involved</a>
+            </li>
+          </ul>
+        </nav>
+
+        <nav aria-label="TinkerHub" className="site-footer__col">
+          <h2 className="site-footer__heading">TinkerHub ecosystem</h2>
+          <ul>
+            {TINKERHUB_FOOTER_LINKS.map((l) => (
+              <li key={l.href}>
+                <ExternalLink href={l.href}>{l.label}</ExternalLink>
               </li>
             ))}
           </ul>
-          <Status kind="placeholder" source="Social handles, strategy §8.7" />
-        </div>
+        </nav>
 
-        <Placeholder
-          label="Newsletter"
-          hint="Is there an existing WIT newsletter? Signup URL needed (§8.7)."
-          section="partners"
-          className="site-footer__news"
-        />
+        <div className="site-footer__col">
+          <h2 className="site-footer__heading">WIT socials</h2>
+          <p className="site-footer__muted">Official WIT social handles haven’t been confirmed yet, so none are linked.</p>
+          <ContentTag kind="confirm" note="Instagram, LinkedIn, community chat links needed." />
+          <h2 className="site-footer__heading site-footer__heading--spaced">This project</h2>
+          <ul>
+            <li>
+              <ExternalLink href={REPO.url}>Code on GitHub</ExternalLink>
+            </li>
+            <li>
+              <ExternalLink href={REPO.issues}>Report an issue</ExternalLink>
+            </li>
+          </ul>
+        </div>
       </div>
 
       <div className="container site-footer__base">
         <p>
-          Workshop prototype · draft 0.1 · not an official TinkerHub Foundation or WIT website. Content marked
-          Placeholder has not been supplied yet; Verified items come from the WIT website strategy and still need WIT’s
-          confirmation.
+          Community prototype for Women in Tech (WIT), a community under TinkerHub Foundation. Not an official or approved
+          website. Verified facts were checked on official TinkerHub pages on {CHECKED_ON}; demo content is illustrative
+          only.
         </p>
+        <button
+          type="button"
+          className="text-btn text-btn--light"
+          aria-pressed={showSources}
+          onClick={() => setShowSources(!showSources)}
+        >
+          {showSources ? 'Hide sources & notes' : 'Show sources & notes'}
+        </button>
       </div>
     </footer>
   )

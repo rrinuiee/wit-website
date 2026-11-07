@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { IS_SHARED_FEEDBACK } from '../../config/feedback'
-import { FEEDBACK_KINDS, FEEDBACK_SECTIONS, SLOGANS } from '../../content/site'
+import { FEEDBACK_KINDS, FEEDBACK_SECTIONS } from '../../content/feedback'
+import { SLOGANS } from '../../content/wit'
 import { useWorkshop } from '../../context/WorkshopContext'
 import {
   clearLocalFeedback,
@@ -99,9 +100,9 @@ export default function FeedbackPanel() {
     >
       <div className="drawer__sheet">
         <header className="drawer__head">
-          <p className="drawer__kicker">Leave a note in the build log</p>
+          <p className="drawer__kicker">Share your thoughts</p>
           <h2 id={`${formId}-title`} className="drawer__title">
-            What should WIT’s website be?
+            Help shape this website
           </h2>
           <button type="button" className="drawer__close" onClick={closeFeedback}>
             <span aria-hidden="true">×</span>
@@ -114,8 +115,8 @@ export default function FeedbackPanel() {
 
           {result ? (
             <div className="sent" role="status">
-              <span className="sent__stamp" aria-hidden="true">
-                noted
+              <span className="sent__badge" aria-hidden="true">
+                thank you ✦
               </span>
               <p>
                 {result.delivered

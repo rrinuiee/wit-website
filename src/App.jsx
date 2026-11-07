@@ -1,43 +1,49 @@
 import { WorkshopProvider } from './context/WorkshopContext'
 import { useReveal } from './hooks/useReveal'
-import { InkFilters } from './components/ui/Stamp'
-import PrototypeBanner from './components/layout/PrototypeBanner'
+import { MARQUEE } from './content/wit'
+
+import AnnouncementBar from './components/layout/AnnouncementBar'
 import SiteHeader from './components/layout/SiteHeader'
-import WorkshopDock from './components/layout/WorkshopDock'
-import FeedbackPanel from './components/layout/FeedbackPanel'
 import SiteFooter from './components/layout/SiteFooter'
+import FloatingFeedback from './components/layout/FloatingFeedback'
+import FeedbackPanel from './components/layout/FeedbackPanel'
+import Marquee from './components/ui/Marquee'
+
 import Hero from './sections/Hero'
 import About from './sections/About'
 import WhatWeDo from './sections/WhatWeDo'
-import TinkHerHack from './sections/TinkHerHack'
+import Learn from './sections/Learn'
+import Initiatives from './sections/Initiatives'
 import Events from './sections/Events'
-import Community from './sections/Community'
+import Stories from './sections/Stories'
 import GetInvolved from './sections/GetInvolved'
-import Partners from './sections/Partners'
+import Contribute from './sections/Contribute'
 
+/** The page, top to bottom. Each section lives in src/sections/. */
 function Page() {
   useReveal()
   return (
     <>
-      <InkFilters />
       <a className="skip-link" href="#main">
         Skip to content
       </a>
       <div id="top" />
-      <PrototypeBanner />
+      <AnnouncementBar />
       <SiteHeader />
       <main id="main" tabIndex={-1}>
         <Hero />
+        <Marquee items={MARQUEE} />
         <About />
         <WhatWeDo />
-        <TinkHerHack />
+        <Learn />
+        <Initiatives />
         <Events />
-        <Community />
+        <Stories />
         <GetInvolved />
-        <Partners />
+        <Contribute />
       </main>
       <SiteFooter />
-      <WorkshopDock />
+      <FloatingFeedback />
       <FeedbackPanel />
     </>
   )

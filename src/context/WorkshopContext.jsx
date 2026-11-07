@@ -1,47 +1,29 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ACCENTS, DEFAULT_ACCENT, SLOGANS } from '../content/site'
+import { createContext, useCallback, useContext, useMemo, useState } from 'react'
+import { SLOGANS } from '../content/wit'
 import { useStoredState } from '../hooks/useStoredState'
 
+/**
+ * Shared state for the whole page:
+ * - showSources: whether content labels also show their source/notes
+ * - feedback: whether the feedback drawer is open (and what it's about)
+ * - myVote: the slogan this visitor voted for (stored on this device only)
+ */
 const WorkshopContext = createContext(null)
 
-const isAccent = (v) => ACCENTS.some((a) => a.id === v)
-const isSlogan = (v) => SLOGANS.some((s) => s.id === v)
 const isBool = (v) => typeof v === 'boolean'
-const isVote = (v) => v === null || isSlogan(v)
+const isVote = (v) => v === null || SLOGANS.some((s) => s.id === v)
 
 export function WorkshopProvider({ children }) {
-  const [accent, setAccent] = useStoredState('wit-proto:accent', DEFAULT_ACCENT, isAccent)
-  const [reviewMode, setReviewMode] = useStoredState('wit-proto:review', false, isBool)
-  const [slogan, setSlogan] = useStoredState('wit-proto:slogan', SLOGANS[0].id, isSlogan)
-  const [myVote, setMyVote] = useStoredState('wit-proto:vote', null, isVote)
+  const [showSources, setShowSources] = useStoredState('wit:show-sources', false, isBool)
+  const [myVote, setMyVote] = useStoredState('wit:slogan-vote', null, isVote)
   const [feedback, setFeedback] = useState({ open: false, preset: null })
-
-  useEffect(() => {
-    document.documentElement.dataset.accent = accent
-  }, [accent])
-
-  useEffect(() => {
-    document.documentElement.dataset.review = reviewMode ? 'on' : 'off'
-  }, [reviewMode])
 
   const openFeedback = useCallback((preset = null) => setFeedback({ open: true, preset }), [])
   const closeFeedback = useCallback(() => setFeedback((f) => ({ ...f, open: false })), [])
 
   const value = useMemo(
-    () => ({
-      accent,
-      setAccent,
-      reviewMode,
-      setReviewMode,
-      slogan,
-      setSlogan,
-      myVote,
-      setMyVote,
-      feedback,
-      openFeedback,
-      closeFeedback,
-    }),
-    [accent, setAccent, reviewMode, setReviewMode, slogan, setSlogan, myVote, setMyVote, feedback, openFeedback, closeFeedback],
+    () => ({ showSources, setShowSources, myVote, setMyVote, feedback, openFeedback, closeFeedback }),
+    [showSources, setShowSources, myVote, setMyVote, feedback, openFeedback, closeFeedback],
   )
 
   return <WorkshopContext.Provider value={value}>{children}</WorkshopContext.Provider>

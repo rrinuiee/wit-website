@@ -1,73 +1,82 @@
-import { ABOUT, TINKERHUB_URL } from '../content/site'
-import SectionHeader from '../components/ui/SectionHeader'
-import Placeholder from '../components/ui/Placeholder'
-import Status from '../components/ui/Status'
-import { IndexCard, MarginNote, Tape } from '../components/ui/Paper'
+import { ABOUT_WIT } from '../content/wit'
+import { TINKERHUB, TINKERHUB_LINKS } from '../content/tinkerhub'
+import { SOURCES } from '../content/sources'
+import SectionHeading from '../components/ui/SectionHeading'
+import ContentTag from '../components/ui/ContentTag'
+import ExternalLink from '../components/ui/ExternalLink'
+import Doodle from '../components/ui/Doodle'
 
 export default function About() {
   return (
     <section id="about" className="section about" aria-labelledby="about-title">
       <div className="container">
-        <SectionHeader log="01" kicker="About WIT" title="A notebook we’re writing together." id="about-title" />
+        <SectionHeading
+          label="About WIT"
+          id="about-title"
+          title={
+            <>
+              A community, <em>not a classroom.</em>
+            </>
+          }
+        />
 
         <div className="about__grid">
-          <div className="about__known reveal">
-            <p className="mono-label">What we can already say</p>
-            <blockquote className="about__quote">
-              <p>{ABOUT.verifiedLine}</p>
-            </blockquote>
-            <Status kind="verified" source={ABOUT.verifiedSource} />
-
-            <IndexCard className="about__family" tilt={-0.8}>
-              <Tape pos="top-left" tone="slate" />
-              <p className="mono-label">How WIT fits</p>
-              <p>
-                WIT belongs to the TinkerHub Foundation family and shares its maker spirit.{' '}
-                <a href={TINKERHUB_URL} target="_blank" rel="noopener noreferrer">
-                  Visit tinkerhub.org<span className="sr-only"> (opens in a new tab)</span>
-                </a>
+          <div className="about__story reveal">
+            {ABOUT_WIT.paragraphs.map((p) => (
+              <p key={p.slice(0, 20)} className="about__para">
+                {p}
               </p>
-              <Status
-                kind="recommended"
-                source="Family framing from strategy §3.1 / §5.2; governance details (e.g. Campus Council relationship) are a Placeholder (§8.2)"
-              />
-            </IndexCard>
+            ))}
+            <ContentTag kind="demo" note="Illustrative copy — WIT’s real story and values still need to be written by the team." />
 
-            <MarginNote arrow="left" className="about__note">
-              casing still open: “WIT” or “WiT”? (§9 Q8)
-            </MarginNote>
+            <ul className="about__values" aria-label="What we value (demo)">
+              {ABOUT_WIT.values.map((v, i) => (
+                <li key={v} className={`value value--${i + 1}`}>
+                  <Doodle name="heart" />
+                  {v}
+                </li>
+              ))}
+            </ul>
           </div>
 
-          <div className="about__slots reveal">
-            <Placeholder
-              label="Who we are"
-              hint="Two sentences, verb-first. Who WIT is and who it’s for."
-              cite="§5.1 · §8.2"
-              section="about"
-              className="about__slot about__slot--lg"
-            />
-            <Placeholder
-              label="Our story"
-              hint="Origin and today, under 200 words. When and how did WIT start?"
-              cite="§5.2 · §8.2"
-              section="about"
-              className="about__slot"
-            />
-            <Placeholder
-              label="What we believe"
-              hint="Three to four short pillars."
-              cite="§5.2 · §8.2"
-              section="about"
-              className="about__slot"
-            >
-              <span className="pillar-ghosts" aria-hidden="true">
-                <span>i.</span>
-                <span>ii.</span>
-                <span>iii.</span>
-                <span>iv.</span>
-              </span>
-            </Placeholder>
-          </div>
+          <aside className="family-card reveal" aria-labelledby="family-title">
+            <p className="family-card__label">
+              <Doodle name="sparkle" /> Part of the TinkerHub family
+            </p>
+            <h3 id="family-title" className="family-card__title">
+              WIT belongs to a much bigger community of makers.
+            </h3>
+
+            <blockquote className="family-card__quote">
+              <p>“{TINKERHUB.description.quote}”</p>
+            </blockquote>
+            <ContentTag kind="verified" source={SOURCES.home} />
+
+            <div className="family-card__mission">
+              <p className="family-card__mini">TinkerHub’s mission</p>
+              <p>“{TINKERHUB.mission.quote}”</p>
+              <ContentTag kind="verified" source={SOURCES.home} note="TinkerHub’s mission, not a WIT target." />
+            </div>
+
+            <p className="family-card__mini">How TinkerHub brings its vision to life</p>
+            <ol className="action-plan">
+              {TINKERHUB.actionPlan.map((item, i) => (
+                <li key={item.title}>
+                  <span className="action-plan__no" aria-hidden="true">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span>
+                    <strong>{item.title}</strong> {item.text}
+                  </span>
+                </li>
+              ))}
+            </ol>
+            <ContentTag kind="verified" source={SOURCES.home} note="TinkerHub’s “Action plan”." />
+
+            <ExternalLink href={TINKERHUB_LINKS.site} className="btn btn--ghost btn--sm family-card__btn">
+              Visit tinkerhub.org
+            </ExternalLink>
+          </aside>
         </div>
       </div>
     </section>

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Base: reset, paper surface, type defaults, accessibility helpers
+   BASE — reset, page background, typography defaults, helpers
    ========================================================================== */
 
 *,
@@ -11,58 +11,21 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
-  scroll-padding-top: calc(var(--header-h) + 12px);
-  background-color: var(--paper);
+  scroll-padding-top: calc(var(--header-h) + 16px);
+  background: var(--cream);
 }
 
 body {
   margin: 0;
   min-height: 100vh;
   overflow-x: clip;
-  color: var(--ink);
+  background: var(--cream);
+  color: var(--plum);
   font-family: var(--font-body);
   font-size: 1.0625rem;
-  line-height: 1.55;
-  background-color: var(--paper);
-  /* Graph paper */
-  background-image:
-    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
-  background-size: var(--grid-size) var(--grid-size);
-  background-position: -1px -1px;
-  text-rendering: optimizeLegibility;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-}
-
-/* Paper grain */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.11 0 0 0 0 0.1 0 0 0 0 0.09 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-/* Notebook margin rule */
-@media (min-width: 768px) {
-  body::after {
-    content: '';
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: clamp(8px, 1.4vw, 22px);
-    width: 1.5px;
-    z-index: -1;
-    pointer-events: none;
-    background: color-mix(in srgb, var(--accent) 50%, transparent);
-  }
-}
-
-img,
-svg {
-  display: block;
-  max-width: 100%;
+  text-rendering: optimizeLegibility;
 }
 
 h1,
@@ -72,19 +35,26 @@ h4,
 p,
 figure,
 blockquote,
-dl,
-dd {
+ul,
+ol {
   margin: 0;
+}
+
+ul,
+ol {
+  padding: 0;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
 }
 
 a {
   color: inherit;
   text-decoration-thickness: 1.5px;
-  text-underline-offset: 0.18em;
-}
-
-a:hover {
-  text-decoration-color: var(--accent);
+  text-underline-offset: 0.2em;
 }
 
 button,
@@ -99,20 +69,31 @@ button {
   cursor: pointer;
 }
 
+em {
+  font-style: italic;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
 ::selection {
-  background: color-mix(in srgb, var(--accent) 28%, transparent);
+  background: var(--lilac);
+  color: var(--plum);
 }
 
 :focus-visible {
-  outline: 3px solid var(--ink);
+  outline: 3px solid var(--lilac-deep);
   outline-offset: 3px;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
 main:focus {
   outline: none;
 }
 
+/* ---------- Helpers ---------- */
 .container {
   width: 100%;
   max-width: calc(var(--container) + 2 * var(--gutter));
@@ -135,13 +116,13 @@ main:focus {
 .skip-link {
   position: absolute;
   left: 12px;
-  top: -120px;
+  top: -100px;
   z-index: 100;
-  padding: 0.75rem 1rem;
-  background: var(--ink);
-  color: var(--paper);
-  font-weight: 600;
-  border-radius: 6px;
+  padding: 0.75rem 1.1rem;
+  border-radius: 999px;
+  background: var(--plum);
+  color: var(--cream);
+  font-weight: 700;
   text-decoration: none;
 }
 
@@ -149,24 +130,13 @@ main:focus {
   top: 12px;
 }
 
-.mono-label {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-}
-
-/* --------------------------------------------------------------------------
-   Scroll reveal — only hides content once JS confirms it can reveal it.
-   -------------------------------------------------------------------------- */
+/* ---------- Scroll reveal (only hides things once JS can reveal them) ---------- */
 .js-reveal .reveal {
   opacity: 0;
-  translate: 0 18px;
+  translate: 0 22px;
   transition:
-    opacity 0.6s var(--ease) var(--delay, 0ms),
-    translate 0.6s var(--ease) var(--delay, 0ms);
+    opacity 0.7s var(--ease) var(--delay, 0ms),
+    translate 0.7s var(--ease) var(--delay, 0ms);
 }
 
 .js-reveal .reveal.is-visible {
@@ -174,6 +144,7 @@ main:focus {
   translate: 0 0;
 }
 
+/* ---------- Respect "reduce motion" ---------- */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

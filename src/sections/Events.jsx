@@ -1,44 +1,57 @@
-import { EVENTS } from '../content/site'
-import { upcomingEvents } from '../lib/events'
-import SectionHeader from '../components/ui/SectionHeader'
-import Status from '../components/ui/Status'
-import { EmptyTicket, EventTicket } from '../components/ui/EventTicket'
+import { UPCOMING_EVENTS, PAST_EVENTS } from '../content/events'
+import { TINKERHUB_LINKS } from '../content/tinkerhub'
+import { isUpcoming } from '../lib/events'
+import SectionHeading from '../components/ui/SectionHeading'
+import EventCard from '../components/ui/EventCard'
+import ExternalLink from '../components/ui/ExternalLink'
+import Tabs from '../components/ui/Tabs'
 
-const MAX = 3
+function EventList({ events }) {
+  return (
+    <ul className="event-list">
+      {events.map((e) => (
+        <li key={e.id}>
+          <EventCard event={e} />
+        </li>
+      ))}
+    </ul>
+  )
+}
 
 export default function Events() {
-  const upcoming = upcomingEvents(EVENTS).slice(0, MAX)
+  // Verified events with a date disappear after their day; demo events always show.
+  const upcoming = UPCOMING_EVENTS.filter((e) => !e.date || isUpcoming(e.date))
 
   return (
     <section id="events" className="section events" aria-labelledby="events-title">
       <div className="container">
-        <SectionHeader log="04" kicker="Upcoming events" title="What’s on." id="events-title">
-          <p>
-            Only events with a verified date that hasn’t passed appear here. Everything else is marked as still to come.
-          </p>
-          <Status
-            kind="recommended"
-            source="WiT Leadership Summit (Nov 18–19) is left out on purpose: its year is only “as reported” in strategy §3.4"
-          />
-        </SectionHeader>
+        <SectionHeading
+          label="Events"
+          id="events-title"
+          title={
+            <>
+              What’s <em>on.</em>
+            </>
+          }
+        >
+          <p>Verified events link to TinkerHub’s official listing. Demo events show how WIT’s own calendar could look.</p>
+        </SectionHeading>
 
-        <div className="events__list">
-          {upcoming.map((e) => (
-            <div key={e.id} className="reveal">
-              <EventTicket event={e} />
-            </div>
-          ))}
-          <div className="reveal">
-            <EmptyTicket
-              title={upcoming.length ? 'More WIT events' : 'Next WIT event'}
-              hint={
-                upcoming.length
-                  ? 'Workshops, meetups, info sessions — dates not supplied yet.'
-                  : 'No verified upcoming date right now. To be announced.'
-              }
-            />
-          </div>
+        <div className="reveal">
+          <Tabs
+            label="Events"
+            tabs={[
+              { id: 'upcoming', label: 'Upcoming', content: <EventList events={upcoming} /> },
+              { id: 'past', label: 'Past', content: <EventList events={PAST_EVENTS} /> },
+            ]}
+          />
         </div>
+
+        <p className="events__more">
+          <ExternalLink href={TINKERHUB_LINKS.events} className="btn btn--ghost">
+            Browse every TinkerHub event
+          </ExternalLink>
+        </p>
       </div>
     </section>
   )

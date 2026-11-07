@@ -1,91 +1,94 @@
 /* ==========================================================================
-   Design tokens — "The Build Log"
-   Accent candidates come from strategy §6.2; terracotta is the working default.
+   DESIGN TOKENS
+   Change colours, fonts and spacing here — everything else uses these names.
+
+   Palette idea: warm cream base, lilac + peach as the main pastels, a muted
+   rose for actions, a deep plum for text and dark sections. Butter and lime
+   are tiny accents (lime is a nod to TinkerHub's own palette).
+
+   Contrast (WCAG AA, checked): plum / plum-soft / rose / lilac-deep /
+   coral-deep text on cream all ≥ 4.5:1; white on rose ≥ 7:1; plum on any
+   pastel ≥ 5.9:1.
    ========================================================================== */
 
 :root {
-  /* Paper & ink */
-  --paper: #f3eee3;
-  --card: #fbf8f2;
-  --ink: #1d1b18;
-  --ink-soft: #5a554d;
-  --grid: #bcc8d0;
-  --slate: #3e5a6e;
+  /* Base */
+  --cream: #fff7ee;
+  --paper: #fffdf9;
 
-  /* Accent (overridden per data-accent below) */
-  --accent: #b5452b; /* fills, stamp ink, rules */
-  --accent-text: #b5452b; /* accent used for text on paper — AA checked */
-  --on-accent: #ffffff; /* text placed on an accent fill */
+  /* Text & dark */
+  --plum: #2b1b2f;
+  --plum-soft: #5e4d62;
+  --plum-raised: #3c2842; /* cards on dark sections */
+  --on-dark: #f6eef8;
+  --on-dark-soft: #d9cbe0;
 
-  --accent-wash: color-mix(in srgb, var(--accent) 11%, transparent);
-  --tape-accent: color-mix(in srgb, var(--accent) 40%, transparent);
-  --tape-slate: color-mix(in srgb, var(--slate) 28%, transparent);
+  /* Pastels (backgrounds) and their "deep" text-safe partners */
+  --lilac: #cdb9f2;
+  --lilac-soft: #f0e8fc;
+  --lilac-deep: #6a4ca6;
+
+  --peach: #ffcdb2;
+  --peach-soft: #ffede2;
+
+  --coral: #f2775c;
+  --coral-deep: #b5402a;
+
+  --rose: #8c2f55;
+  --rose-hover: #74244a;
+  --rose-soft: #f7dce6;
+  --rose-mid: #eab0c6;
+
+  --butter: #ffe08a;
+  --butter-soft: #fff4cc;
+  --butter-deep: #7a5200;
+
+  --mint-soft: #dff3e7;
+  --mint-deep: #1f5a3a;
+
+  --lime: #c3ff16;
 
   /* Lines */
-  --line: rgb(29 27 24 / 0.13);
-  --line-strong: rgb(29 27 24 / 0.3);
-  --grid-line: rgb(188 200 208 / 0.42);
+  --line: rgb(43 27 47 / 0.12);
+  --line-strong: rgb(43 27 47 / 0.24);
 
-  /* Review-mode status colours (kept away from the accent hues) */
-  --verified: #2b5a3a;
-  --verified-bg: #e0ebde;
-  --recommended: #3e5a6e;
-  --recommended-bg: #dfe7ec;
-  --placeholder: #5a554d;
-
-  /* Type */
+  /* Fonts */
   --font-display: 'Bricolage Grotesque Variable', 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
   --font-body: 'Source Sans 3 Variable', 'Source Sans 3', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-  /* Space — 8px base; the 24px graph grid doubles as the layout rhythm */
-  --grid-size: 24px;
+  /* Shape */
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 24px;
+  --r-xl: 36px;
+
+  /* Shadows */
+  --shadow-soft: 0 18px 40px -24px rgb(43 27 47 / 0.35);
+  --shadow-lift: 0 26px 50px -24px rgb(43 27 47 / 0.45);
+  --shadow-sticker: 4px 4px 0 var(--plum);
+
+  /* Layout */
   --container: 1200px;
-  --gutter: 16px;
-  --section-y: 72px;
-  --header-h: 64px;
+  --gutter: 20px;
+  --section-y: 80px;
+  --header-h: 68px;
 
-  /* Surfaces */
-  --radius: 4px;
-  --shadow-card: 0 1px 0 rgb(29 27 24 / 0.05), 0 14px 26px -18px rgb(29 27 24 / 0.5);
-  --shadow-lift: 0 2px 0 rgb(29 27 24 / 0.05), 0 26px 36px -20px rgb(29 27 24 / 0.55);
-  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease: cubic-bezier(0.22, 0.8, 0.24, 1);
 }
 
 @media (min-width: 640px) {
   :root {
-    --gutter: 24px;
-    --section-y: 96px;
+    --gutter: 32px;
+    --section-y: 104px;
   }
 }
 
 @media (min-width: 1024px) {
   :root {
-    --gutter: 40px;
-    --section-y: 136px;
-    --header-h: 72px;
+    --gutter: 48px;
+    --section-y: 128px;
+    --header-h: 76px;
   }
-}
-
-/* Accent candidates (strategy §6.2). Contrast: all --accent-text values ≥ 4.5:1 on paper. */
-:root[data-accent='terracotta'] {
-  --accent: #b5452b;
-  --accent-text: #b5452b;
-  --on-accent: #ffffff;
-}
-:root[data-accent='magenta'] {
-  --accent: #9e1f5c;
-  --accent-text: #9e1f5c;
-  --on-accent: #ffffff;
-}
-:root[data-accent='red'] {
-  --accent: #c8281e;
-  --accent-text: #b8241b;
-  --on-accent: #ffffff;
-}
-:root[data-accent='coral'] {
-  /* Electric coral is too light for small text: fills use ink text; text uses a deeper tone. */
-  --accent: #ff5b3a;
-  --accent-text: #b53a1c;
-  --on-accent: #1d1b18;
 }
